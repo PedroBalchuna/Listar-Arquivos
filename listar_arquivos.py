@@ -1,5 +1,20 @@
 from pathlib import Path
 from datetime import datetime
+import sqlite3
+
+conexao = sqlite3.connect('meu_banco.db')
+cursor = conexao.cursor()
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS arquivos (
+    id INTEGER PRIMARY KEY  AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    caminho TEXT NOT NULL,
+    tamanho REAL NOT NULL,
+    criacao  DATE NOT NULL
+)
+''')
+conexao.commit()
 
 pastas = list()
 entrada = str(input('Digite o caminho da pasta que deseja ler: '))
@@ -24,6 +39,15 @@ else:
             }
 
             pastas.append(dados)
+
+            conexao.execute('''
+            INSERT INTO arquivos (nome, caminho, tamanho, criacao)
+            VALUES (?, ?, ?, ?)
+            ''', (nome, str(caminho), tamanho, criacao))
+
+    conexao.commit()
+
+    conexao.close()
 
     op = str(input("Deseja filtrar os arquivos? [S/N]: ")).upper().strip()
     while op not in 'SN':
