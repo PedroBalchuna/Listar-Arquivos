@@ -1,20 +1,13 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from pathlib import Path
 from datetime import datetime
-import sqlite3
+from libs_funcoes.libs_funcoes import criar_banco
 
-conexao = sqlite3.connect('meu_banco.db')
-cursor = conexao.cursor()
-
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS arquivos (
-    id INTEGER PRIMARY KEY  AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    caminho TEXT NOT NULL,
-    tamanho REAL NOT NULL,
-    criacao  DATE NOT NULL
-)
-''')
-conexao.commit()
+conexao, cursor = criar_banco()
 
 pastas = list()
 entrada = str(input('Digite o caminho da pasta que deseja ler: '))
